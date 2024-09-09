@@ -3,34 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insertar Datos</title>
+    <title>Gestión de Alumnos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        form {
+            display: inline;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Formulario para Insertar Datos</h1>
-    <form method="POST">
+
+    <h1>{{ 'Editar Alumno' if alumno_edit else 'Insertar Alumnos' }}</h1>
+    <form action="/insert" method="POST">
+        <input type="hidden" name="id" value="{{ alumno_edit[0] if alumno_edit else '' }}">
+        
         <label for="nombre">Nombre:</label><br>
-        <input type="text" id="nombre" name="nombre" required><br><br>
+        <input type="text" id="nombre" name="nombre" value="{{ alumno_edit[1] if alumno_edit else '' }}" required><br><br>
+        
         <label for="sexo">Sexo:</label><br>
-        <input type="text" id="sexo" name="sexo" required><br><br>
+        <input type="text" id="sexo" name="sexo" value="{{ alumno_edit[2] if alumno_edit else '' }}" required><br><br>
+        
         <label for="edad">Edad:</label><br>
-        <input type="number" id="edad" name="edad" required><br><br>
-        <input type="submit" value="Insertar">
+        <input type="number" id="edad" name="edad" value="{{ alumno_edit[3] if alumno_edit else '' }}" required><br><br>
+        
+        <input type="submit" value="{{ 'Actualizar' if alumno_edit else 'Insertar' }}">
     </form>
 
-    <h2>Datos Capturados</h2>
-    <table border="1">
+    <h2>Lista de Alumnos</h2>
+    <table>
         <tr>
+            <th>ID</th>
             <th>Nombre</th>
             <th>Sexo</th>
             <th>Edad</th>
+            <th>Editar</th>
         </tr>
         {% for alumno in alumnos %}
         <tr>
             <td>{{ alumno[0] }}</td>
             <td>{{ alumno[1] }}</td>
             <td>{{ alumno[2] }}</td>
+            <td>{{ alumno[3] }}</td>
+            <td>
+                <form action="/edit/{{ alumno[0] }}" method="GET" style="display:inline;">
+                    <input type="submit" value="Editar">
+                </form>
+                <form action="/delete/{{ alumno[0] }}" method="POST" style="display:inline;">
+                    <input type="submit" value="Eliminar">
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>
+
 </body>
 </html>
